@@ -20,6 +20,9 @@ var postAceInit = function(hook, context){
       hs.val("dummy");
     }
   })
+  $('.font_color').hover(function(){
+    $('.submenu > .color-selection').attr('size', 6);
+  });
 };
 
 // Our colors attribute will result in a heaading:h1... :h6 class
