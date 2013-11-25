@@ -23,6 +23,9 @@ var postAceInit = function(hook, context){
   $('.font_color').hover(function(){
     $('.submenu > .color-selection').attr('size', 6);
   });
+  $('.font-color-icon').click(function(){
+    $('#font-color').toggle();
+  });
 };
 
 // Our colors attribute will result in a heaading:h1... :h6 class
