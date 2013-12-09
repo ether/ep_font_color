@@ -30,17 +30,21 @@ var postAceInit = function(hook, context){
 
 // Our colors attribute will result in a heaading:h1... :h6 class
 function aceAttribsToClasses(hook, context){
-  if(context.key == 'colors'){
-    return ['colors:' + context.value ];
+  if(context.key.indexOf("color:") !== -1){
+    var color = /(?:^| )color:([A-Za-z0-9]*)/.exec(context.key);
+    return ['color:' + color[1] ];
+  }
+  if(context.key == 'color'){
+    return ['color:' + context.value ];
   }
 }
 
 
-// Here we convert the class colors:h1 into a tag
+// Here we convert the class color:red into a tag
 exports.aceCreateDomLine = function(name, context){
   var cls = context.cls;
   var domline = context.domline;
-  var colorsType = /(?:^| )colors:([A-Za-z0-9]*)/.exec(cls);
+  var colorsType = /(?:^| )color:([A-Za-z0-9]*)/.exec(cls);
 
   var tagIndex;
   if (colorsType) tagIndex = _.indexOf(colors, colorsType[1]);
@@ -72,11 +76,11 @@ function doInsertColors(level){
   
   if(level >= 0){
     documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, [
-      ['colors', colors[level]]
+      ['color', colors[level]]
     ]);
   }else{
     documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, [
-      ['colors', '']
+      ['color', '']
     ]);
   }
 }
