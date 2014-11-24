@@ -1,7 +1,7 @@
 <li class="separator acl-write"></li>
-<li class="acl-write font-color-icon">
+<li class="acl-write font-color-icon ep_font_color">
   <a title="Font color">
-    <span class="buttonicon" style="background-image:url('../static/plugins/ep_font_color/static/img/icon.png');"></span>
+    <span class="buttonicon"></span>
   </a>
 </li>
 <li id="font-color" class="acl-write" style="display:none;">
@@ -15,3 +15,14 @@
         <option value="5" data-l10n-id="ep_font_color.orange">orange</option>
     </select>
 </li>
+
+<style>
+.ep_font_color {
+  font-family:font-awesome;
+}
+.ep_font_color .buttonicon:before{
+  color: #2E0854;
+  content:"\e81b";
+  top: 2px !important;
+}
+</style>
