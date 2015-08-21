@@ -2,7 +2,7 @@ var _, $, jQuery;
 
 var $ = require('ep_etherpad-lite/static/js/rjquery').$;
 var _ = require('ep_etherpad-lite/static/js/underscore');
-var colorsClass = 'colors';
+var cssFiles = ["ep_font_color/static/css/color.css"];
 
 // All our colors are block elements, so we just return them.
 var colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
@@ -28,33 +28,33 @@ var postAceInit = function(hook, context){
   });
 };
 
-// Our colors attribute will result in a heaading:h1... :h6 class
+// Our colors attribute will result in a color_red... _yellow class
 function aceAttribsToClasses(hook, context){
-  if(context.key.indexOf("color:") !== -1){
-    var color = /(?:^| )color:([A-Za-z0-9]*)/.exec(context.key);
-    return ['color:' + color[1] ];
+  if(context.key.indexOf("color_") !== -1){
+    var color = /(?:^| )color_([A-Za-z0-9]*)/.exec(context.key);
+    return ['color_' + color[1] ];
   }
   if(context.key == 'color'){
-    return ['color:' + context.value ];
+    return ['color_' + context.value ];
   }
 }
 
 
-// Here we convert the class color:red into a tag
+// Here we convert the class color_red into a tag
 exports.aceCreateDomLine = function(name, context){
   var cls = context.cls;
   var domline = context.domline;
-  var colorsType = /(?:^| )color:([A-Za-z0-9]*)/.exec(cls);
+  var colorsType = /(?:^| )color_([A-Za-z0-9]*)/.exec(cls);
 
   var tagIndex;
   if (colorsType) tagIndex = _.indexOf(colors, colorsType[1]);
 
-      
+
   if (tagIndex !== undefined && tagIndex >= 0){
     var tag = colors[tagIndex];
     var modifier = {
-      extraOpenTags: '<span style="color: ' + tag + ';">',
-      extraCloseTags: '</span>',
+      extraOpenTags: '',
+      extraCloseTags: '',
       cls: cls
     };
     return [modifier];
@@ -63,9 +63,8 @@ exports.aceCreateDomLine = function(name, context){
 };
 
 
-
-// Find out which lines are selected and assign them the colors attribute.
-// Passing a level >= 0 will set a colors on the selected lines, level < 0 
+// Find out which lines are selected and assign them the color_ attribute.
+// Passing a level >= 0 will set a colors on the selected lines, level < 0
 // will remove it
 function doInsertColors(level){
   var rep = this.rep,
@@ -73,16 +72,15 @@ function doInsertColors(level){
   if (!(rep.selStart && rep.selEnd) || (level >= 0 && colors[level] === undefined)){
     return;
   }
-  
-  if(level >= 0){
-    documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, [
-      ['color', colors[level]]
-    ]);
-  }else{
-    documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, [
-      ['color', '']
-    ]);
-  }
+
+  // build a map with all values set to empty, except for the selected color
+  var attr = {};
+  colors.forEach(function(color) {
+    attr['color_' + color] = "";
+  });
+  attr['color_' + colors[level]] = (level >= 0).toString();
+
+  documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, _.pairs(attr));
 }
 
 
@@ -92,8 +90,13 @@ function aceInitialized(hook, context){
   editorInfo.ace_doInsertColors = _(doInsertColors).bind(context);
 }
 
+function aceEditorCSS(){
+  return cssFiles;
+};
+
 
 // Export all hooks
 exports.aceInitialized = aceInitialized;
 exports.postAceInit = postAceInit;
 exports.aceAttribsToClasses = aceAttribsToClasses;
+exports.aceEditorCSS = aceEditorCSS;
