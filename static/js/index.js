@@ -28,23 +28,23 @@ var postAceInit = function(hook, context){
   });
 };
 
-// Our colors attribute will result in a color_red... _yellow class
+// Our colors attribute will result in a color:red... _yellow class
 function aceAttribsToClasses(hook, context){
-  if(context.key.indexOf("color_") !== -1){
-    var color = /(?:^| )color_([A-Za-z0-9]*)/.exec(context.key);
-    return ['color_' + color[1] ];
+  if(context.key.indexOf("color:") !== -1){
+    var color = /(?:^| )color:([A-Za-z0-9]*)/.exec(context.key);
+    return ['color:' + color[1] ];
   }
   if(context.key == 'color'){
-    return ['color_' + context.value ];
+    return ['color:' + context.value ];
   }
 }
 
 
-// Here we convert the class color_red into a tag
+// Here we convert the class color:red into a tag
 exports.aceCreateDomLine = function(name, context){
   var cls = context.cls;
   var domline = context.domline;
-  var colorsType = /(?:^| )color_([A-Za-z0-9]*)/.exec(cls);
+  var colorsType = /(?:^| )color:([A-Za-z0-9]*)/.exec(cls);
 
   var tagIndex;
   if (colorsType) tagIndex = _.indexOf(colors, colorsType[1]);
@@ -63,7 +63,7 @@ exports.aceCreateDomLine = function(name, context){
 };
 
 
-// Find out which lines are selected and assign them the color_ attribute.
+// Find out which lines are selected and assign them the color attribute.
 // Passing a level >= 0 will set a colors on the selected lines, level < 0
 // will remove it
 function doInsertColors(level){
@@ -73,14 +73,12 @@ function doInsertColors(level){
     return;
   }
 
-  // build a map with all values set to empty, except for the selected color
-  var attr = {};
-  colors.forEach(function(color) {
-    attr['color_' + color] = "";
-  });
-  attr['color_' + colors[level]] = (level >= 0).toString();
+  var new_color = ["color", ""];
+  if(level >= 0) {
+    new_color = ["color", colors[level]];
+  }
 
-  documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, _.pairs(attr));
+  documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, [new_color]);
 }
 
 

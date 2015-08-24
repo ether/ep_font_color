@@ -39,7 +39,7 @@ describe('export color styles to HTML', function(){
     it('returns HTML with color class', function(done) {
       api.get(getHTMLEndPointFor(padID))
       .expect(function(res){
-        var expectedRegex = "<span .*class=['|\"].*color_red.*['|\"].*>this is red<\/span>";
+        var expectedRegex = regexWithColor("red");
         var expectedColors = new RegExp(expectedRegex);
         var html = res.body.data.html;
         var foundColor = html.match(expectedColors);
@@ -59,8 +59,8 @@ describe('export color styles to HTML', function(){
     it('returns HTML with two color spans', function(done) {
       api.get(getHTMLEndPointFor(padID))
       .expect(function(res){
-        var firstColor = "<span .*class=['|\"].*color_red.*['|\"].*>this is red<\/span>";
-        var secondColor = "<span .*class=['|\"].*color_blue.*['|\"].*>this is blue<\/span>";
+        var firstColor = regexWithColor("red");
+        var secondColor = regexWithColor("blue");
         var expectedRegex = firstColor + ".*" + secondColor;
         var expectedColors = new RegExp(expectedRegex);
 
@@ -104,8 +104,8 @@ describe('export color styles to HTML', function(){
     it('returns HTML with strong and color, in any order', function(done) {
       api.get(getHTMLEndPointFor(padID))
       .expect(function(res){
-        var strongInsideColorRegex = "<span .*class=['|\"].*color_red.*['|\"].*><strong>this is red and bold<\/strong><\/span>";
-        var colorInsideStrongRegex = "<strong><span .*class=['|\"].*color_red.*['|\"].*>this is red and bold<\/span><\/strong>";
+        var strongInsideColorRegex = regexWithColor("red", "<strong>this is red and bold<\/strong>");
+        var colorInsideStrongRegex = "<strong>" + regexWithColor("red", "this is red and bold") + "<\/strong>";
         var expectedStrongInsideColor = new RegExp(strongInsideColorRegex);
         var expectedColorInsideStrong = new RegExp(colorInsideStrongRegex);
 
@@ -128,8 +128,8 @@ describe('export color styles to HTML', function(){
     it('returns HTML with strong and color, in any order', function(done) {
       api.get(getHTMLEndPointFor(padID))
       .expect(function(res){
-        var strongInsideColorRegex = "<span .*class=['|\"].*color_red.*['|\"].*><strong>this is red and bold<\/strong><\/span>";
-        var colorInsideStrongRegex = "<strong><span .*class=['|\"].*color_red.*['|\"].*>this is red and bold<\/span><\/strong>";
+        var strongInsideColorRegex = regexWithColor("red", "<strong>this is red and bold<\/strong>");
+        var colorInsideStrongRegex = "<strong>" + regexWithColor("red", "this is red and bold") + "<\/strong>";
         var expectedStrongInsideColor = new RegExp(strongInsideColorRegex);
         var expectedColorInsideStrong = new RegExp(colorInsideStrongRegex);
 
@@ -151,7 +151,7 @@ describe('export color styles to HTML', function(){
     it('returns HTML with part with color and part without it', function(done) {
       api.get(getHTMLEndPointFor(padID))
       .expect(function(res){
-        var expectedRegex = "no color here <span .*class=['|\"].*color_red.*['|\"].*>this is red<\/span>";
+        var expectedRegex = "no color here " + regexWithColor("red");
         var expectedColors = new RegExp(expectedRegex);
         var html = res.body.data.html;
         var foundColor = html.match(expectedColors);
@@ -210,5 +210,12 @@ var buildHTML = function(body) {
 var textWithColor = function(color, text) {
   if (!text) text = "this is " + color;
 
-  return "<span class='color_" + color + "'>" + text + "</span>";
+  return "<span class='color:" + color + "'>" + text + "</span>";
 }
+
+var regexWithColor = function(color, text) {
+  if (!text) text = "this is " + color;
+
+  return "<span .*class=['|\"].*color:" + color + ".*['|\"].*>" + text + "<\/span>"
+}
+
