@@ -48,20 +48,12 @@ exports.getLineHTMLForExport = function (hook, context) {
 
 function rewriteLine(context){
   var lineContent = context.lineContent;
-  colors.forEach(function(color_name){
-    if(lineContent){
-      lineContent = lineContent.replaceAll("<color:"+color_name, "<span class='color:"+color_name+"'");
-      lineContent = lineContent.replaceAll("</color:"+color_name, "</span");
-    }
-  });
-
+  lineContent = replaceDataByClass(lineContent);
   // TODO: when "asyncLineHTMLForExport" hook is available on Etherpad, return "lineContent" instead of re-setting it
   context.lineContent = lineContent;
-  // return lineContent;
 }
 
-// Got this from ep_font_size
-String.prototype.replaceAll = function(str1, str2, ignore)
-{
-  return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+// Change from <span data-color:x  to <span class:color:x
+function replaceDataByClass(text) {
+  return text.replace(/data-color=["|']([0-9a-zA-Z]+)["|']/gi, "class='color:$1'");
 }
