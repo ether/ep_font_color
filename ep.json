@@ -14,7 +14,7 @@
         "eejsBlock_editbarMenuLeft": "ep_font_color/index",
         "collectContentPre": "ep_font_color/static/js/shared",
         "collectContentPost": "ep_font_color/static/js/shared",
-        "exportHtmlAdditionalTags": "ep_font_color/exportHTML",
+        "exportHtmlAdditionalTagsWithData": "ep_font_color/exportHTML",
         "stylesForExport": "ep_font_color/exportHTML",
         "getLineHTMLForExport": "ep_font_color/exportHTML",
         "eejsBlock_dd_format":"ep_font_color/index"
