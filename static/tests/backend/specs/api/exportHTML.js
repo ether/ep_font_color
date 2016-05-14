@@ -216,6 +216,11 @@ var textWithColor = function(color, text) {
 var regexWithColor = function(color, text) {
   if (!text) text = "this is " + color;
 
-  return "<span .*class=['|\"].*color:" + color + ".*['|\"].*>" + text + "<\/span>"
+  var regex = "<span .*class=['|\"].*color:" + color + ".*['|\"].*>" + text + "<\/span>";
+  // bug fix: if no other plugin on the Etherpad instance returns a value on getLineHTMLForExport() hook,
+  // data-color=(...) won't be replaced by class=color:(...), so we need a fallback regex
+  var fallbackRegex = "<span .*data-color=['|\"]" + color + "['|\"].*>" + text + "<\/span>";
+
+  return regex + " || " + fallbackRegex;
 }
 
