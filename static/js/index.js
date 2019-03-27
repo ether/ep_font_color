@@ -23,9 +23,6 @@ var postAceInit = function(hook, context){
   $('.font_color').hover(function(){
     $('.submenu > .color-selection').attr('size', 6);
   });
-  $('.font-color-icon').click(function(){
-    $('#font-color').toggle();
-  });
 };
 
 // Our colors attribute will result in a color:red... _yellow class
@@ -92,8 +89,17 @@ function aceEditorCSS(){
   return cssFiles;
 };
 
+function postToolbarInit (hook_name, context) {
+  var editbar = context.toolbar; // toolbar is actually editbar - http://etherpad.org/doc/v1.5.7/#index_editbar
+
+  editbar.registerCommand('fontColor', function (buttonName, toolbar, item) {
+    $(item.$el).after($('#font-color'));
+    $('#font-color').toggle();
+  });
+};
 
 // Export all hooks
+exports.postToolbarInit = postToolbarInit;
 exports.aceInitialized = aceInitialized;
 exports.postAceInit = postAceInit;
 exports.aceAttribsToClasses = aceAttribsToClasses;

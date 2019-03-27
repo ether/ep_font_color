@@ -42,9 +42,9 @@ exports.stylesForExport = function(hook, padId, cb){
 //   cb(rewriteLine);
 // }
 
-exports.getLineHTMLForExport = function (hook, context) {
+exports.getLineHTMLForExport = function (hook, context, cb) {
   rewriteLine(context);
-  return true;
+  cb();
 }
 
 function rewriteLine(context){
