@@ -15,7 +15,7 @@ exports.padInitToolbar = function (hook_name, args) {
   var fontColor = toolbar.button({
       command: 'fontColor',
       localizationId: 'ep_font_color.toolbar.font_color.title',
-      class: "buttonicon font-color-icon ep_font_color"
+      class: "buttonicon buttonicon-pencil ep_font_color"
   });
 
   toolbar.registerButton('fontColor', fontColor);
