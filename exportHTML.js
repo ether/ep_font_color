@@ -4,11 +4,9 @@ var _ = require('ep_etherpad-lite/static/js/underscore');
 var colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
 // Add the props to be supported in export
-exports.exportHtmlAdditionalTagsWithData = function(hook, pad, cb){
+exports.exportHtmlAdditionalTagsWithData = async (hookName, pad) => {
   var colors_used = findAllColorUsedOn(pad);
-  var tags = transformColorsIntoTags(colors_used);
-
-  cb(tags);
+  return transformColorsIntoTags(colors_used);
 };
 
 // Iterate over pad attributes to find only the color ones
@@ -32,19 +30,13 @@ function transformColorsIntoTags(color_names) {
 }
 
 // Include CSS for HTML export
-exports.stylesForExport = function(hook, padId, cb){
-  var style = eejs.require("ep_font_color/static/css/color.css");
-  cb(style);
+exports.stylesForExport = async (hookName, padId) => {
+  return eejs.require('ep_font_color/static/css/color.css');
 };
 
-// TODO: when "asyncLineHTMLForExport" hook is available on Etherpad, use it instead of "getLineHTMLForExport"
-// exports.asyncLineHTMLForExport = function (hook, context, cb) {
-//   cb(rewriteLine);
-// }
-
-exports.getLineHTMLForExport = function (hook, context) {
+exports.getLineHTMLForExport = async (hookName, context) => {
   rewriteLine(context);
-}
+};
 
 function rewriteLine(context){
   var lineContent = context.lineContent;
