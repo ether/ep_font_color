@@ -1,32 +1,18 @@
-var eejs = require('ep_etherpad-lite/node/eejs/');
-var _ = require('ep_etherpad-lite/static/js/underscore');
+const _ = require('ep_etherpad-lite/static/js/underscore');
+const eejs = require('ep_etherpad-lite/node/eejs/');
 
-var colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
+const colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
 // Add the props to be supported in export
 exports.exportHtmlAdditionalTagsWithData = async (hookName, pad) => {
-  var colors_used = findAllColorUsedOn(pad);
-  return transformColorsIntoTags(colors_used);
+  return findAllColorUsedOn(pad).map((name) => ['color', name]);
 };
 
 // Iterate over pad attributes to find only the color ones
 function findAllColorUsedOn(pad) {
-  var colors_used = [];
-
-  pad.pool.eachAttrib(function(key, value){
-    if (key === "color") {
-      colors_used.push(value);
-    }
-  });
-
-  return colors_used;
-}
-
-// Transforms an array of color names into color tags like ["color", "red"]
-function transformColorsIntoTags(color_names) {
-  return _.map(color_names, function(color_name) {
-    return ["color", color_name];
-  });
+  const colorsUsed = [];
+  pad.pool.eachAttrib((key, value) => { if (key === 'color') colorsUsed.push(value); });
+  return colorsUsed;
 }
 
 // Include CSS for HTML export
@@ -35,17 +21,7 @@ exports.stylesForExport = async (hookName, padId) => {
 };
 
 exports.getLineHTMLForExport = async (hookName, context) => {
-  rewriteLine(context);
+  // Replace data-color="foo" with class="color:x".
+  context.lineContent =
+      context.lineContent.replace(/data-color=["|']([0-9a-zA-Z]+)["|']/gi, 'class="color:$1"');
 };
-
-function rewriteLine(context){
-  var lineContent = context.lineContent;
-  lineContent = replaceDataByClass(lineContent);
-  // TODO: when "asyncLineHTMLForExport" hook is available on Etherpad, return "lineContent" instead of re-setting it
-  context.lineContent = lineContent;
-}
-
-// Change from <span data-color:x  to <span class:color:x
-function replaceDataByClass(text) {
-  return text.replace(/data-color=["|']([0-9a-zA-Z]+)["|']/gi, "class='color:$1'");
-}
