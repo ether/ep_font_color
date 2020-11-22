@@ -2,14 +2,14 @@ var _ = require('ep_etherpad-lite/static/js/underscore');
 
 var colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
-var collectContentPre = function(hook, context){
-  var color = /(?:^| )color:([A-Za-z0-9]*)/.exec(context.cls);
-  if(color && color[1]){
-    context.cc.doAttrib(context.state, "color::" + color[1]);
+var collectContentPre = function (hook, context) {
+  const color = /(?:^| )color:([A-Za-z0-9]*)/.exec(context.cls);
+  if (color && color[1]) {
+    context.cc.doAttrib(context.state, `color::${color[1]}`);
   }
 };
 
-var collectContentPost = function(hook, context){
+var collectContentPost = function (hook, context) {
 /*
   var tname = context.tname;
   var state = context.state;

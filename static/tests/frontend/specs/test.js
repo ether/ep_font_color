@@ -1,11 +1,10 @@
-describe("Set Font Color and ensure its removed properly", function(){
-
+describe('Set Font Color and ensure its removed properly', function () {
   // Tests still to do
   // Ensure additional chars keep the same formatting
   // Ensure heading value is properly set when caret is placed on font color changed content
 
-  //create a new pad before each test run
-  beforeEach(function(cb){
+  // create a new pad before each test run
+  beforeEach(function (cb) {
     helper.newPad(cb);
     this.timeout(60000);
   });
@@ -16,40 +15,39 @@ describe("Set Font Color and ensure its removed properly", function(){
   // Select all text
   // Set it to Color black
 
-  it("Changes from Color black to red and back to black", function(done) {
+  it('Changes from Color black to red and back to black', function (done) {
     this.timeout(60000);
-    var chrome$ = helper.padChrome$;
-    var inner$ = helper.padInner$;
+    const chrome$ = helper.padChrome$;
+    const inner$ = helper.padInner$;
 
-    var $firstTextElement = inner$("div").first();
-    var $editorContainer = chrome$("#editorcontainer");
+    let $firstTextElement = inner$('div').first();
+    const $editorContainer = chrome$('#editorcontainer');
 
-    var $editorContents = inner$("div")
+    const $editorContents = inner$('div');
     $firstTextElement.sendkeys('foo');
     $firstTextElement.sendkeys('{selectall}');
 
     // sets first line to Font Color red
-    chrome$('.color-selection').val("1");
+    chrome$('.color-selection').val('1');
     chrome$('.color-selection').change();
 
-    var fElement = inner$("div").first();
-    helper.waitFor(function(){
-      let elementHasClass = fElement.children().first().hasClass("color:red");
+    let fElement = inner$('div').first();
+    helper.waitFor(() => {
+      const elementHasClass = fElement.children().first().hasClass('color:red');
       return expect(elementHasClass).to.be(true);
-    }).done(function(){
-      $firstTextElement = inner$("div").first();
+    }).done(() => {
+      $firstTextElement = inner$('div').first();
       $firstTextElement.sendkeys('{selectall}');
       // sets first line to Font Color black
       chrome$('.color-selection').val('0');
       chrome$('.color-selection').change();
-      helper.waitFor(function(){
-        fElement = inner$("div").first();
-        let elementHasClass = fElement.children().first().hasClass("color:black");
+      helper.waitFor(() => {
+        fElement = inner$('div').first();
+        const elementHasClass = fElement.children().first().hasClass('color:black');
         return expect(elementHasClass).to.be(true);
-      }).done(function(){
+      }).done(() => {
         done();
       });
     });
   });
 });
-
