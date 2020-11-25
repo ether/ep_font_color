@@ -1,15 +1,13 @@
-var _, $, jQuery;
-
-var $ = require('ep_etherpad-lite/static/js/rjquery').$;
-var _ = require('ep_etherpad-lite/static/js/underscore');
-var cssFiles = ['ep_font_color/static/css/color.css'];
+const $ = require('ep_etherpad-lite/static/js/rjquery').$;
+const _ = require('ep_etherpad-lite/static/js/underscore');
+const cssFiles = ['ep_font_color/static/css/color.css'];
 
 // All our colors are block elements, so we just return them.
-var colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
+const colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
 // Bind the event handler to the toolbar buttons
-var postAceInit = function (hook, context) {
-  const hs = $('.color-selection');
+const postAceInit = function (hook, context) {
+  const hs = $('.color-selection, #color-selection');
   hs.on('change', function () {
     const value = $(this).val();
     const intValue = parseInt(value, 10);
@@ -22,6 +20,7 @@ var postAceInit = function (hook, context) {
   });
   $('.font_color').hover(() => {
     $('.submenu > .color-selection').attr('size', 6);
+    $('.submenu > #color-selection').attr('size', 6);
   });
   $('.font-color-icon').click(() => {
     $('#font-color').toggle();
@@ -92,8 +91,17 @@ function aceEditorCSS() {
   return cssFiles;
 }
 
+function postToolbarInit (hook_name, context) {
+  const editbar = context.toolbar;
+
+  editbar.registerCommand('fontColor', function (buttonName, toolbar, item) {
+    $(item.$el).after($('#font-color'));
+    $('#font-color').toggle();
+  });
+};
 
 // Export all hooks
+exports.postToolbarInit = postToolbarInit;
 exports.aceInitialized = aceInitialized;
 exports.postAceInit = postAceInit;
 exports.aceAttribsToClasses = aceAttribsToClasses;
