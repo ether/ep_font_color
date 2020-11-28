@@ -63,7 +63,7 @@ exports.aceCreateDomLine = (name, context) => {
 // Find out which lines are selected and assign them the color attribute.
 // Passing a level >= 0 will set a colors on the selected lines, level < 0
 // will remove it
-const doInsertColors = (level) => {
+const doInsertColors = function (level) {
   const rep = this.rep;
   const documentAttributeManager = this.documentAttributeManager;
   if (!(rep.selStart && rep.selEnd) || (level >= 0 && colors[level] === undefined)) {
