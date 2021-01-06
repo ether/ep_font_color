@@ -36,7 +36,7 @@ describe('Set Font Color and ensure its removed properly', function () {
       return expect(elementHasClass).to.be(true);
     }).done(() => {
       $firstTextElement = inner$('div').first();
-      $firstTextElement.sendkeys('{selectall}');
+
       // sets first line to Font Color black
       chrome$('.color-selection').val('0');
       chrome$('.color-selection').change();
@@ -45,6 +45,33 @@ describe('Set Font Color and ensure its removed properly', function () {
         const elementHasClass = fElement.children().first().hasClass('color:black');
         return expect(elementHasClass).to.be(true);
       }).done(() => {
+        done();
+      });
+    });
+  });
+
+  it('Changes color to red selects text again to check selector', function (done) {
+    this.timeout(60000);
+    const chrome$ = helper.padChrome$;
+    const inner$ = helper.padInner$;
+
+    let $firstTextElement = inner$('div').first();
+    $firstTextElement.sendkeys('{selectall}');
+    $firstTextElement.trigger('click');
+    // sets first line to Font Color red
+    chrome$('.color-selection').val('1');
+    chrome$('.color-selection').change();
+
+    const fElement = inner$('div').first();
+    helper.waitFor(() => {
+      const elementHasClass = fElement.children().first().hasClass('color:red');
+      return expect(elementHasClass).to.be(true);
+    }).done(() => {
+      $firstTextElement = inner$('div').first();
+      $firstTextElement.sendkeys('{rightarrow}');
+      $firstTextElement.sendkeys('{leftarrow}');
+      helper.waitFor(() => chrome$('.color-selection').val() === '1').done(() => {
+        expect(chrome$('.color-selection').val()).to.be('1');
         done();
       });
     });

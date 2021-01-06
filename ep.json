@@ -5,6 +5,7 @@
       "client_hooks": {
         "postAceInit": "ep_font_color/static/js/index",
         "aceInitialized": "ep_font_color/static/js/index",
+        "aceEditEvent": "ep_font_color/static/js/index",
         "aceEditorCSS": "ep_font_color/static/js/index",
         "aceCreateDomLine": "ep_font_color/static/js/index",
         "postToolbarInit": "ep_font_color/static/js/index",
