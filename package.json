@@ -1,7 +1,7 @@
 {
   "description": "Apply colors to fonts",
   "name": "ep_font_color",
-  "version": "0.0.24",
+  "version": "0.0.32",
   "license": "Apache-2.0",
   "author": {
     "name": "John McLear",
@@ -9,7 +9,7 @@
   },
   "dependencies": {},
   "engines": {
-    "node": "*"
+    "node": ">=10.13.0"
   },
   "repository": {
     "type": "git",
@@ -34,5 +34,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
+  },
+  "peerDependencies": {
+    "ep_etherpad-lite": ">=1.8.6"
   }
 }

@@ -1,3 +1,5 @@
+'use strict';
+
 describe('Set Font Color and ensure its removed properly', function () {
   // Tests still to do
   // Ensure additional chars keep the same formatting
@@ -21,9 +23,6 @@ describe('Set Font Color and ensure its removed properly', function () {
     const inner$ = helper.padInner$;
 
     let $firstTextElement = inner$('div').first();
-    const $editorContainer = chrome$('#editorcontainer');
-
-    const $editorContents = inner$('div');
     $firstTextElement.sendkeys('foo');
     $firstTextElement.sendkeys('{selectall}');
 

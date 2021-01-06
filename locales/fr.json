@@ -1,8 +1,10 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Verdy p"
+		]
 	},
-	"ep_font_color.color": "Couleurs",
+	"ep_font_color.color": "Couleur",
 	"ep_font_color.black": "noir",
 	"ep_font_color.red": "rouge",
 	"ep_font_color.green": "vert",
