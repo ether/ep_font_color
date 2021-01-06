@@ -1,14 +1,13 @@
 'use strict';
 
 const _ = require('ep_etherpad-lite/static/js/underscore');
-const cssFiles = ['ep_font_color/static/css/color.css'];
 
 // All our colors are block elements, so we just return them.
 const colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
 // Bind the event handler to the toolbar buttons
 const postAceInit = function (hook, context) {
-  const hs = $('.color-selection');
+  const hs = $('.color-selection, #color-selection');
   hs.on('change', function () {
     const value = $(this).val();
     const intValue = parseInt(value, 10);
@@ -21,6 +20,7 @@ const postAceInit = function (hook, context) {
   });
   $('.font_color').hover(() => {
     $('.submenu > .color-selection').attr('size', 6);
+    $('.submenu > #color-selection').attr('size', 6);
   });
   $('.font-color-icon').click(() => {
     $('#font-color').toggle();
@@ -85,10 +85,18 @@ const aceInitialized = (hook, context) => {
   editorInfo.ace_doInsertColors = _(doInsertColors).bind(context);
 };
 
-const aceEditorCSS = () => cssFiles;
+const postToolbarInit = (hook, context) => {
+  const editbar = context.toolbar;
+
+  editbar.registerCommand('fontColor', (buttonName, toolbar, item) => {
+    $(item.$el).after($('#font-color'));
+    $('#font-color').toggle();
+  });
+};
 
 // Export all hooks
+exports.postToolbarInit = postToolbarInit;
 exports.aceInitialized = aceInitialized;
 exports.postAceInit = postAceInit;
 exports.aceAttribsToClasses = aceAttribsToClasses;
-exports.aceEditorCSS = aceEditorCSS;
+exports.aceEditorCSS = () => ['ep_font_color/static/css/color.css'];
