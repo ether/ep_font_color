@@ -9,8 +9,8 @@ const findAllColorUsedOn = (pad) => {
 };
 
 // Add the props to be supported in export
-exports.exportHtmlAdditionalTagsWithData = async (hookName, pad) => findAllColorUsedOn(pad).
-    map((name) => ['color', name]);
+exports.exportHtmlAdditionalTagsWithData = async (hookName, pad) => findAllColorUsedOn(pad)
+    .map((name) => ['color', name]);
 
 // Include CSS for HTML export
 exports.stylesForExport = async (hookName, padId) => eejs
