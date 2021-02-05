@@ -1,17 +1,15 @@
 'use strict';
 
-const _ = require('ep_etherpad-lite/static/js/underscore');
-
 // All our colors are block elements, so we just return them.
 const colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
 // Bind the event handler to the toolbar buttons
-const postAceInit = function (hook, context) {
+const postAceInit = (hook, context) => {
   const hs = $('.color-selection, #color-selection');
   hs.on('change', function () {
     const value = $(this).val();
     const intValue = parseInt(value, 10);
-    if (!_.isNaN(intValue)) {
+    if (!isNaN(intValue)) {
       context.ace.callWithAce((ace) => {
         ace.ace_doInsertColors(intValue);
       }, 'insertColor', true);
@@ -45,8 +43,7 @@ exports.aceCreateDomLine = (name, context) => {
   const colorsType = /(?:^| )color:([A-Za-z0-9]*)/.exec(cls);
 
   let tagIndex;
-  if (colorsType) tagIndex = _.indexOf(colors, colorsType[1]);
-
+  if (colorsType) tagIndex = colors.indexOf(colorsType[1]);
 
   if (tagIndex !== undefined && tagIndex >= 0) {
     const modifier = {
@@ -82,7 +79,7 @@ const doInsertColors = function (level) {
 // Once ace is initialized, we set ace_doInsertColors and bind it to the context
 const aceInitialized = (hook, context) => {
   const editorInfo = context.editorInfo;
-  editorInfo.ace_doInsertColors = _(doInsertColors).bind(context);
+  editorInfo.ace_doInsertColors = doInsertColors.bind(context);
 };
 
 const postToolbarInit = (hook, context) => {
