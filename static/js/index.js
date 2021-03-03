@@ -91,17 +91,17 @@ const postToolbarInit = (hook, context) => {
   });
 };
 
-const aceEditEvent = (hook, call, cb) => {
+const aceEditEvent = (hook, call) => {
   const cs = call.callstack;
   const attrManager = call.documentAttributeManager;
   const rep = call.rep;
   const allowedEvents = ['handleClick', 'handleKeyEvent'];
   if (allowedEvents.indexOf(cs.type) === -1 && !(cs.docTextChanged)) {
-    return cb();
+    return;
   }
 
   // If it's an initial setup event then do nothing..
-  if (cs.type === 'setBaseText' || cs.type === 'setup') return cb();
+  if (cs.type === 'setBaseText' || cs.type === 'setup') return;
   // It looks like we should check to see if this section has this attribute
   setTimeout(() => { // avoid race condition..
     const colorSelect = $('.color-selection, #color-selection');
@@ -135,7 +135,7 @@ const aceEditEvent = (hook, call, cb) => {
     colorSelect.niceSelect('update');
   }, 250);
 
-  return cb();
+  return;
 };
 // Export all hooks
 exports.postToolbarInit = postToolbarInit;
