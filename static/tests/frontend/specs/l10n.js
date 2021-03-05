@@ -39,7 +39,7 @@ describe('Select color dropdown localization', function () {
 
   it('Localizes dropdown when Etherpad language is changed', function (done) {
     const optionTranslations = {
-      'ep_font_color.color': 'Couleurs',
+      'ep_font_color.color': 'Couleur',
       'ep_font_color.black': 'noir',
       'ep_font_color.red': 'rouge',
       'ep_font_color.green': 'vert',
