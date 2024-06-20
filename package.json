@@ -1,7 +1,7 @@
 {
   "description": "Apply colors to fonts",
   "name": "ep_font_color",
-  "version": "0.0.86",
+  "version": "0.0.87",
   "license": "Apache-2.0",
   "author": {
     "name": "John McLear",
