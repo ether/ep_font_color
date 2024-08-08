@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Trọng Đặng"
+		]
+	},
+	"ep_font_color.color": "Màu",
+	"ep_font_color.black": "đen",
+	"ep_font_color.red": "đỏ",
+	"ep_font_color.green": "xanh lá",
+	"ep_font_color.blue": "xanh dương",
+	"ep_font_color.yellow": "vàng",
+	"ep_font_color.orange": "cam"
+}
