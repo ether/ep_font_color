@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ovruni"
+		]
+	},
+	"ep_font_color.color": "Color",
+	"ep_font_color.black": "negro",
+	"ep_font_color.red": "rojo",
+	"ep_font_color.green": "verde",
+	"ep_font_color.blue": "azul",
+	"ep_font_color.yellow": "amarillo",
+	"ep_font_color.orange": "naranja"
+}
