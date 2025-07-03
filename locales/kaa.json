@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Inabat Allanova"
+		]
+	},
+	"ep_font_color.color": "Reń",
+	"ep_font_color.black": "qara",
+	"ep_font_color.red": "qızıl",
+	"ep_font_color.green": "jasıl",
+	"ep_font_color.blue": "kók",
+	"ep_font_color.yellow": "sarı",
+	"ep_font_color.orange": "toq sarı"
+}
