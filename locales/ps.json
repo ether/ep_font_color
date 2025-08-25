@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"شاه زمان پټان"
+		]
+	},
+	"ep_font_color.color": "رنگ",
+	"ep_font_color.black": "تور",
+	"ep_font_color.red": "سور",
+	"ep_font_color.green": "زرغون",
+	"ep_font_color.blue": "نيلي",
+	"ep_font_color.yellow": "ژېړ",
+	"ep_font_color.orange": "نارنجي"
+}
