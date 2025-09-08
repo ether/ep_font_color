@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Gothicspeaker"
+		]
+	},
+	"ep_font_color.color": "𐍆𐌰𐌹𐌷𐌴𐌹",
+	"ep_font_color.black": "𐍃𐍅𐌰𐍂𐍄",
+	"ep_font_color.red": "𐍂𐌰𐌿𐌸",
+	"ep_font_color.green": "𐌲𐍂𐍉𐌽",
+	"ep_font_color.blue": "𐌱𐌻𐌴𐍅",
+	"ep_font_color.yellow": "𐌲𐌹𐌻𐍅",
+	"ep_font_color.orange": "𐌲𐌹𐌻𐍅𐌰𐍂𐌰𐌿𐌸"
+}
