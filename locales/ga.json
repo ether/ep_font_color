@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aindriu80"
+		]
+	},
+	"ep_font_color.color": "Dath",
+	"ep_font_color.black": "dubh",
+	"ep_font_color.red": "dearg",
+	"ep_font_color.green": "glas",
+	"ep_font_color.blue": "gorm",
+	"ep_font_color.yellow": "buí",
+	"ep_font_color.orange": "oráiste"
+}
