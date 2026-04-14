@@ -1,16 +1,27 @@
-![Publish Status](https://github.com/ether/ep_font_color/workflows/Node.js%20Package/badge.svg) [![Backend Tests Status](https://github.com/ether/ep_font_color/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/ether/ep_font_color/actions/workflows/test-and-release.yml)
+# ep_font_color
 
-# Etherpad plugin to change font color
-If you want to reposition the color select in toolbar then in `settings.json` under `toolbar` add button `fontColor` example:
+Adds a font color picker to the Etherpad toolbar, with HTML export support.
+
+## Install
+
 ```
-"toolbar": {
+pnpm run plugins i ep_font_color
+```
+
+## Settings
+
+To reposition the color picker in the toolbar, add `fontColor` to your `settings.json` toolbar configuration:
+
+```json
+{
+  "toolbar": {
     "left": [
-      [
-        "fontColor",
-        "bold",
-        "italic",
-        "underline",
-        "strikethrough"
-      ]
+      ["fontColor", "bold", "italic", "underline", "strikethrough"]
+    ]
+  }
 }
 ```
+
+## License
+
+Apache-2.0
