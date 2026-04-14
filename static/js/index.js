@@ -1,10 +1,16 @@
 'use strict';
 
-// All our colors are block elements, so we just return them.
+const {inlineAttribute} = require('ep_plugin_helpers/attributes');
+
 const colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
+const fontColor = inlineAttribute({attr: 'color', values: colors});
+
+exports.aceAttribsToClasses = fontColor.aceAttribsToClasses;
+exports.aceCreateDomLine = fontColor.aceCreateDomLine;
+
 // Bind the event handler to the toolbar buttons
-const postAceInit = (hook, context) => {
+exports.postAceInit = (hook, context) => {
   const hs = $('.color-selection, #color-selection');
   hs.on('change', function () {
     const value = $(this).val();
@@ -21,47 +27,12 @@ const postAceInit = (hook, context) => {
     $('.submenu > .color-selection').attr('size', 6);
     $('.submenu > #color-selection').attr('size', 6);
   });
-  $('.font-color-icon').click(() => {
+  $('.font-color-icon').on('click', () => {
     $('#font-color').toggle();
     context.ace.focus();
   });
 };
 
-// Our colors attribute will result in a color:red... _yellow class
-const aceAttribsToClasses = (hook, context) => {
-  if (context.key.indexOf('color:') !== -1) {
-    const color = /(?:^| )color:([A-Za-z0-9]*)/.exec(context.key);
-    return [`color:${color[1]}`];
-  }
-  if (context.key === 'color') {
-    return [`color:${context.value}`];
-  }
-};
-
-
-// Here we convert the class color:red into a tag
-exports.aceCreateDomLine = (name, context) => {
-  const cls = context.cls;
-  const colorsType = /(?:^| )color:([A-Za-z0-9]*)/.exec(cls);
-
-  let tagIndex;
-  if (colorsType) tagIndex = colors.indexOf(colorsType[1]);
-
-  if (tagIndex !== undefined && tagIndex >= 0) {
-    const modifier = {
-      extraOpenTags: '',
-      extraCloseTags: '',
-      cls,
-    };
-    return [modifier];
-  }
-  return [];
-};
-
-
-// Find out which lines are selected and assign them the color attribute.
-// Passing a level >= 0 will set a colors on the selected lines, level < 0
-// will remove it
 const doInsertColors = function (level) {
   const rep = this.rep;
   const documentAttributeManager = this.documentAttributeManager;
@@ -77,14 +48,12 @@ const doInsertColors = function (level) {
   documentAttributeManager.setAttributesOnRange(rep.selStart, rep.selEnd, [newColor]);
 };
 
-
-// Once ace is initialized, we set ace_doInsertColors and bind it to the context
-const aceInitialized = (hook, context) => {
+exports.aceInitialized = (hook, context) => {
   const editorInfo = context.editorInfo;
   editorInfo.ace_doInsertColors = doInsertColors.bind(context);
 };
 
-const postToolbarInit = (hook, context) => {
+exports.postToolbarInit = (hook, context) => {
   const editbar = context.toolbar;
 
   editbar.registerCommand('fontColor', (buttonName, toolbar, item) => {
@@ -93,7 +62,7 @@ const postToolbarInit = (hook, context) => {
   });
 };
 
-const aceEditEvent = (hook, call) => {
+exports.aceEditEvent = (hook, call) => {
   const cs = call.callstack;
   const attrManager = call.documentAttributeManager;
   const rep = call.rep;
@@ -102,26 +71,15 @@ const aceEditEvent = (hook, call) => {
     return;
   }
 
-  // If it's an initial setup event then do nothing..
   if (cs.type === 'setBaseText' || cs.type === 'setup') return;
-  // It looks like we should check to see if this section has this attribute
-  setTimeout(() => { // avoid race condition..
+  setTimeout(() => {
     const colorSelect = $('.color-selection, #color-selection');
-    colorSelect.val('dummy'); // reset value to the dummy value
+    colorSelect.val('dummy');
     colorSelect.niceSelect('update');
-    // Attribtes are never available on the first X caret position so we need to ignore that
-    if (rep.selStart[1] === 0) {
-      // Attributes are never on the first line
-      return;
-    }
-    // The line has an attribute set, this means it wont get hte correct X caret position
+    if (rep.selStart[1] === 0) return;
     if (rep.selStart[1] === 1) {
-      if (rep.alltext[0] === '*') {
-        // Attributes are never on the "first" character of lines with attributes
-        return;
-      }
+      if (rep.alltext[0] === '*') return;
     }
-    // the caret is in a new position.. Let's do some funky shit
     const startAttribs = attrManager.getAttributesOnPosition(rep.selStart[0], rep.selStart[1]);
     const endAttribs = attrManager.getAttributesOnPosition(rep.selEnd[0], rep.selEnd[1]);
     const [startColor] = startAttribs.filter((item) => item[0] === 'color');
@@ -136,13 +94,6 @@ const aceEditEvent = (hook, call) => {
     });
     colorSelect.niceSelect('update');
   }, 250);
-
-  return;
 };
-// Export all hooks
-exports.postToolbarInit = postToolbarInit;
-exports.aceInitialized = aceInitialized;
-exports.postAceInit = postAceInit;
-exports.aceAttribsToClasses = aceAttribsToClasses;
-exports.aceEditEvent = aceEditEvent;
+
 exports.aceEditorCSS = () => ['ep_font_color/static/css/color.css'];

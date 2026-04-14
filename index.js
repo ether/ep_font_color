@@ -1,20 +1,13 @@
 'use strict';
 
-const eejs = require('ep_etherpad-lite/node/eejs/');
 const settings = require('ep_etherpad-lite/node/utils/Settings');
+const {template} = require('ep_plugin_helpers');
 
-exports.eejsBlock_editbarMenuLeft = (hook, args, cb) => {
-  if (JSON.stringify(settings.toolbar).indexOf('fontColor') > -1) {
-    return cb();
-  }
-  args.content += eejs.require('ep_font_color/templates/editbarButtons.ejs');
-  return cb();
-};
+exports.eejsBlock_editbarMenuLeft = template('ep_font_color/templates/editbarButtons.ejs', {
+  skip: () => JSON.stringify(settings.toolbar).indexOf('fontColor') > -1,
+});
 
-exports.eejsBlock_dd_format = (hook, args, cb) => {
-  args.content += eejs.require('ep_font_color/templates/fileMenu.ejs');
-  return cb();
-};
+exports.eejsBlock_dd_format = template('ep_font_color/templates/fileMenu.ejs');
 
 exports.padInitToolbar = (hook, args, cb) => {
   const toolbar = args.toolbar;
