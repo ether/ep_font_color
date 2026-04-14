@@ -1,23 +1,13 @@
 'use strict';
-const eejs = require('ep_etherpad-lite/node/eejs/');
 
-// Iterate over pad attributes to find only the color ones
-const findAllColorUsedOn = (pad) => {
-  const colorsUsed = [];
-  pad.pool.eachAttrib((key, value) => { if (key === 'color') colorsUsed.push(value); });
-  return colorsUsed;
-};
+const {inlineAttributeExport} = require('ep_plugin_helpers/attributes-server');
 
-// Add the props to be supported in export
-exports.exportHtmlAdditionalTagsWithData = async (hookName, pad) => findAllColorUsedOn(pad)
-    .map((name) => ['color', name]);
+const colorExport = inlineAttributeExport({
+  attr: 'color',
+  exportCssFile: 'ep_font_color/static/css/color.css',
+  exportDataAttr: 'data-color',
+});
 
-// Include CSS for HTML export
-exports.stylesForExport = async (hookName, padId) => eejs
-    .require('ep_font_color/static/css/color.css');
-
-exports.getLineHTMLForExport = async (hookName, context) => {
-  // Replace data-color="foo" with class="color:x".
-  context.lineContent =
-      context.lineContent.replace(/data-color=["|']([0-9a-zA-Z]+)["|']/gi, 'class="color:$1"');
-};
+exports.exportHtmlAdditionalTagsWithData = colorExport.exportHtmlAdditionalTagsWithData;
+exports.stylesForExport = colorExport.stylesForExport;
+exports.getLineHTMLForExport = colorExport.getLineHTMLForExport;
