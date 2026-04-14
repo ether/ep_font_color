@@ -14,6 +14,7 @@ const postAceInit = (hook, context) => {
         ace.ace_doInsertColors(intValue);
       }, 'insertColor', true);
       hs.val('dummy');
+      context.ace.focus();
     }
   });
   $('.font_color').hover(() => {
@@ -22,6 +23,7 @@ const postAceInit = (hook, context) => {
   });
   $('.font-color-icon').click(() => {
     $('#font-color').toggle();
+    context.ace.focus();
   });
 };
 
