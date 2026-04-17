@@ -1,5 +1,7 @@
 # ep_font_color
 
+![Demo](demo.gif)
+
 Adds a font color picker to the Etherpad toolbar, with HTML export support.
 
 ## Install
