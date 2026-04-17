@@ -31,6 +31,16 @@ exports.postAceInit = (hook, context) => {
     $('#font-color').toggle();
     context.ace.focus();
   });
+  // Re-render the niceSelect dropdown whenever the active UI language
+  // changes. html10n rewrites the underlying <select>'s option text in
+  // place, but niceSelect renders into its own DOM tree at init time and
+  // does not observe DOM mutations — so without a manual refresh the
+  // dropdown keeps showing the previous language (#21).
+  if (typeof html10n !== 'undefined' && typeof html10n.bind === 'function') {
+    html10n.bind('localized', () => {
+      hs.niceSelect('update');
+    });
+  }
 };
 
 const doInsertColors = function (level) {
