@@ -1,4 +1,4 @@
-# ep_font_color
+# Font Colors for Etherpad
 
 ![Demo](demo.gif)
 
