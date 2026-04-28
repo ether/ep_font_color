@@ -63,12 +63,22 @@ test.describe('ep_font_color l10n', () => {
     'ep_font_color.orange': 'orange',
   };
 
+  // niceSelect wraps each <select> with a sibling .nice-select div, so
+  // direct selectOption() on the hidden <select> won't fire the change
+  // handler that triggers the l10n switch. Drive the niceSelect UI as
+  // etherpad core's language.spec does.
+  const langDropdown = (page: any) => page.locator('#languagemenu + .nice-select');
+  const selectLang = async (page: any, value: string) => {
+    await langDropdown(page).click();
+    await page.locator('.nice-select.open').locator(`[data-value=${value}]`).click();
+  };
+
   test('dropdown options translate when language is changed', async ({page}) => {
     await page.locator('.buttonicon-settings').click();
-    await page.locator('#languagemenu').selectOption('fr');
+    await selectLang(page, 'fr');
     // Wait for translation to apply.
-    await expect(page.locator('.buttonicon-bold').locator('..'))
-        .toHaveAttribute('title', /Gras/, {timeout: 10_000});
+    await expect.poll(async () => page.locator('.buttonicon-bold').locator('..')
+        .getAttribute('title'), {timeout: 10_000}).toMatch(/Gras/);
 
     const opts = page.locator('#editbar #font-color option');
     const count = await opts.count();
@@ -82,6 +92,6 @@ test.describe('ep_font_color l10n', () => {
     }
 
     // Restore English so other test runs are not affected.
-    await page.locator('#languagemenu').selectOption('en');
+    await selectLang(page, 'en');
   });
 });
