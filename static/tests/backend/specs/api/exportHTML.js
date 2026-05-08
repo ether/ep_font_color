@@ -212,4 +212,30 @@ describe('export color styles to HTML', function () {
           });
     });
   });
+
+  // Round-trip via inline `style="color:..."`. External HTML (Word
+  // exports, mammoth output, pasted markup) typically uses the standard
+  // CSS form, not the `class="color:red"` form ep_font_color emits on
+  // export. Without the import-side style reader, color is lost.
+  context('when imported HTML uses style="color:..."', function () {
+    for (const color of ['red', 'green', 'blue']) {
+      it(`preserves style="color:${color}" through round-trip`, async function () {
+        const newPadID = randomString(5);
+        await createPad(newPadID);
+        await setHTML(newPadID, buildHTML(
+            `<p>before <span style="color:${color}">styled</span> after</p>`));
+        await agent.get(getHTMLEndPointFor(newPadID))
+            .set('Authorization', await common.generateJWTToken())
+            .expect((res) => {
+              const out = res.body.data.html;
+              const re = new RegExp(
+                  `(class=["'].*color:${color}|data-color=["']${color})`);
+              if (!re.test(out)) {
+                throw new Error(
+                    `Color not preserved on style-import round-trip. Got: ${out}`);
+              }
+            });
+      });
+    }
+  });
 });
