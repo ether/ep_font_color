@@ -8,8 +8,7 @@ test.beforeEach(async ({page}) => {
 });
 
 const setColor = async (page: any, value: string) => {
-  await page.locator('.font-color-icon').click();
-  const select = page.locator('.color-selection').first();
+  const select = page.locator('#font-color select.color-selection');
   await expect(select).toBeAttached();
   await select.evaluate((sel: HTMLSelectElement, v: string) => {
     sel.value = v;
@@ -70,7 +69,8 @@ test.describe('ep_font_color', () => {
     await hideSettings(page);
     await expect(page.frameLocator('iframe[name="ace_outer"]').frameLocator('iframe[name="ace_inner"]')
         .locator('#innerdocbody')).not.toHaveClass(/authorColors/);
-    await expect(page.locator('.color-selection')).toHaveAttribute('title', '');
+    await padBody.click();
+    await expect(page.locator('#font-color select.color-selection')).toHaveAttribute('title', '');
   });
 });
 

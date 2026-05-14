@@ -16,6 +16,9 @@ exports.aceCreateDomLine = fontColor.aceCreateDomLine;
 const hasAuthorColorsEnabled = () => $('iframe[name="ace_outer"]').contents()
     .find('iframe[name="ace_inner"]').contents().find('#innerdocbody').hasClass('authorColors');
 
+const getInnerDocBody = () => $('iframe[name="ace_outer"]').contents()
+    .find('iframe[name="ace_inner"]').contents().find('#innerdocbody').get(0);
+
 const updateToolbarHint = () => {
   const authorColorsEnabled = hasAuthorColorsEnabled();
   const hint = authorColorsEnabled ? authorColorsMessageText : '';
@@ -35,6 +38,11 @@ const maybeShowAuthorColorsNotice = () => {
 // Bind the event handler to the toolbar buttons
 exports.postAceInit = (hook, context) => {
   const hs = $('.color-selection, #color-selection');
+  const scheduleHintRefresh = () => {
+    [0, 50, 150, 400, 800].forEach((delay) => setTimeout(() => {
+      updateToolbarHint();
+    }, delay));
+  };
   hs.on('change', function () {
     const value = $(this).val();
     const intValue = parseInt(value, 10);
@@ -55,6 +63,15 @@ exports.postAceInit = (hook, context) => {
     $('#font-color').toggle();
     context.ace.focus();
   });
+  const innerDocBody = getInnerDocBody();
+  if (innerDocBody && typeof MutationObserver !== 'undefined') {
+    new MutationObserver((mutations) => {
+      if (mutations.some((mutation) => mutation.attributeName === 'class')) updateToolbarHint();
+    }).observe(innerDocBody, {attributes: true, attributeFilter: ['class']});
+  }
+  $('#options-colorscheck, #padsettings-options-colorscheck, ' +
+      'label[for="options-colorscheck"], label[for="padsettings-options-colorscheck"]')
+      .on('click change', scheduleHintRefresh);
   // Re-render the niceSelect dropdown whenever the active UI language
   // changes. html10n rewrites the underlying <select>'s option text in
   // place, but niceSelect renders into its own DOM tree at init time and
