@@ -3,6 +3,8 @@
 ![Demo](demo.gif)
 
 Adds a font color picker to the Etherpad toolbar, with HTML export support.
+If authorship colors are enabled, the chosen font color is still saved but
+the editor will warn that author colors are masking the preview.
 
 ## Install
 

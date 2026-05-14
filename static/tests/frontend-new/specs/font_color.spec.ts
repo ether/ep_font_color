@@ -1,14 +1,17 @@
 import {expect, test} from '@playwright/test';
 import {clearPadContent, getPadBody, goToNewPad, writeToPad}
     from 'ep_etherpad-lite/tests/frontend-new/helper/padHelper';
+import {hideSettings, showSettings} from 'ep_etherpad-lite/tests/frontend-new/helper/settingsHelper';
 
 test.beforeEach(async ({page}) => {
   await goToNewPad(page);
 });
 
 const setColor = async (page: any, value: string) => {
-  await page.evaluate((v: string) => {
-    const sel = document.querySelector<HTMLSelectElement>('.color-selection')!;
+  await page.locator('.font-color-icon').click();
+  const select = page.locator('.color-selection').first();
+  await expect(select).toBeAttached();
+  await select.evaluate((sel: HTMLSelectElement, v: string) => {
     sel.value = v;
     sel.dispatchEvent(new Event('change', {bubbles: true}));
   }, value);
@@ -49,6 +52,25 @@ test.describe('ep_font_color', () => {
     await expect.poll(async () => page.evaluate(
         () => document.querySelector<HTMLSelectElement>('.color-selection')!.value),
     {timeout: 5_000}).toBe('1');
+  });
+
+  test('explains that authorship colors hide the chosen font color', async ({page}) => {
+    const padBody = await getPadBody(page);
+    await padBody.click();
+    await clearPadContent(page);
+    await writeToPad(page, 'foo');
+    await page.keyboard.press('ControlOrMeta+A');
+
+    await setColor(page, '1');
+    await expect(page.locator('.gritter-item').first())
+        .toContainText('Turn off "Colors" in Settings to preview it.');
+
+    await showSettings(page);
+    await page.locator('label[for="options-colorscheck"]').click();
+    await hideSettings(page);
+    await expect(page.frameLocator('iframe[name="ace_outer"]').frameLocator('iframe[name="ace_inner"]')
+        .locator('#innerdocbody')).not.toHaveClass(/authorColors/);
+    await expect(page.locator('.color-selection')).toHaveAttribute('title', '');
   });
 });
 

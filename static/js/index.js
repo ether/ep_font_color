@@ -3,11 +3,34 @@
 const {inlineAttribute} = require('ep_plugin_helpers/attributes');
 
 const colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
+const authorColorsMessageTitle = 'Font colors are hidden by authorship colors';
+const authorColorsMessageText =
+    'Your font color was saved. Turn off "Colors" in Settings to preview it.';
+let authorColorsNoticeShown = false;
 
 const fontColor = inlineAttribute({attr: 'color', values: colors});
 
 exports.aceAttribsToClasses = fontColor.aceAttribsToClasses;
 exports.aceCreateDomLine = fontColor.aceCreateDomLine;
+
+const hasAuthorColorsEnabled = () => $('iframe[name="ace_outer"]').contents()
+    .find('iframe[name="ace_inner"]').contents().find('#innerdocbody').hasClass('authorColors');
+
+const updateToolbarHint = () => {
+  const authorColorsEnabled = hasAuthorColorsEnabled();
+  const hint = authorColorsEnabled ? authorColorsMessageText : '';
+  $('.font-color-icon a, .color-selection, #color-selection').attr('title', hint);
+  if (!authorColorsEnabled) authorColorsNoticeShown = false;
+};
+
+const maybeShowAuthorColorsNotice = () => {
+  if (!hasAuthorColorsEnabled() || authorColorsNoticeShown || !$.gritter) return;
+  authorColorsNoticeShown = true;
+  $.gritter.add({
+    title: authorColorsMessageTitle,
+    text: authorColorsMessageText,
+  });
+};
 
 // Bind the event handler to the toolbar buttons
 exports.postAceInit = (hook, context) => {
@@ -21,6 +44,7 @@ exports.postAceInit = (hook, context) => {
       }, 'insertColor', true);
       hs.val('dummy');
       context.ace.focus();
+      maybeShowAuthorColorsNotice();
     }
   });
   $('.font_color').hover(() => {
@@ -41,6 +65,7 @@ exports.postAceInit = (hook, context) => {
       hs.niceSelect('update');
     });
   }
+  updateToolbarHint();
 };
 
 const doInsertColors = function (level) {
@@ -83,6 +108,7 @@ exports.aceEditEvent = (hook, call) => {
 
   if (cs.type === 'setBaseText' || cs.type === 'setup') return;
   setTimeout(() => {
+    updateToolbarHint();
     const colorSelect = $('.color-selection, #color-selection');
     colorSelect.val('dummy');
     colorSelect.niceSelect('update');
