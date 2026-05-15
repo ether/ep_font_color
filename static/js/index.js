@@ -1,6 +1,7 @@
 'use strict';
 
 const {inlineAttribute} = require('ep_plugin_helpers/attributes');
+const {toolbarSelect} = require('ep_plugin_helpers/toolbar-select');
 
 const colors = ['black', 'red', 'green', 'blue', 'yellow', 'orange'];
 
@@ -11,17 +12,11 @@ exports.aceCreateDomLine = fontColor.aceCreateDomLine;
 
 // Bind the event handler to the toolbar buttons
 exports.postAceInit = (hook, context) => {
-  const hs = $('.color-selection, #color-selection');
-  hs.on('change', function () {
-    const value = $(this).val();
-    const intValue = parseInt(value, 10);
-    if (!isNaN(intValue)) {
-      context.ace.callWithAce((ace) => {
-        ace.ace_doInsertColors(intValue);
-      }, 'insertColor', true);
-      hs.val('dummy');
-      context.ace.focus();
-    }
+  const {$sel: hs} = toolbarSelect({
+    selector: '.color-selection, #color-selection',
+    context,
+    invoke: (ace, value) => ace.ace_doInsertColors(value),
+    op: 'insertColor',
   });
   $('.font_color').hover(() => {
     $('.submenu > .color-selection').attr('size', 6);
