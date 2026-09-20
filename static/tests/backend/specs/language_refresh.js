@@ -9,6 +9,7 @@ const indexPath = path.resolve(
 
 describe(__filename, function () {
   let src;
+
   before(function () { src = fs.readFileSync(indexPath, 'utf8'); });
 
   it('postAceInit rebinds niceSelect on html10n language change (#21)', function () {
