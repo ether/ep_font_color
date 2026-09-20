@@ -10,9 +10,9 @@ const indexPath = path.resolve(
 describe(__filename, function () {
   let src;
 
-  before(function () { src = fs.readFileSync(indexPath, 'utf8'); });
+  before(async function () { src = fs.readFileSync(indexPath, 'utf8'); });
 
-  it('postAceInit rebinds niceSelect on html10n language change (#21)', function () {
+  it('postAceInit rebinds niceSelect on html10n language change (#21)', async function () {
     // niceSelect renders a copy of the <select> at init time and does not
     // observe option-text mutations. After html10n rewrites the <select>
     // options for the new locale, the custom dropdown must be refreshed

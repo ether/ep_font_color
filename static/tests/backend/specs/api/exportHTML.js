@@ -14,7 +14,8 @@ const createPad = async (padID) => {
 };
 
 const setHTML = async (padID, html) => {
-  const res = await agent.get(`/api/${apiVersion}/setHTML?padID=${padID}&html=${encodeURIComponent(html)}`)
+  const res = await agent
+      .get(`/api/${apiVersion}/setHTML?padID=${padID}&html=${encodeURIComponent(html)}`)
       .set('Authorization', await common.generateJWTToken());
   if (res.body.code !== 0) throw new Error('Unable to set pad HTML');
   return padID;
