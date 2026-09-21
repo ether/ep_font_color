@@ -15,7 +15,7 @@ const ALLOWED_COLORS = new Set([
   'black', 'red', 'green', 'blue', 'yellow', 'orange',
 ]);
 
-const NAMED_TO_PALETTE = (raw) => {
+const namedToPalette = (raw) => {
   const v = raw.toLowerCase().trim();
   if (ALLOWED_COLORS.has(v)) return v;
   // Word/LibreOffice often emit hex (e.g. #FF0000). Fold common values
@@ -35,7 +35,7 @@ exports.collectContentPre = (hookName, context) => {
   if (context.styl) {
     const m = STYLE_COLOR_RE.exec(context.styl);
     if (m) {
-      const color = NAMED_TO_PALETTE(m[1]);
+      const color = namedToPalette(m[1]);
       if (color) context.cc.doAttrib(context.state, `color::${color}`);
     }
   }
